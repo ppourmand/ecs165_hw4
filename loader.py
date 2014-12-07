@@ -6,13 +6,9 @@
 import psycopg2
 import csv
 
-# tries to connect to data base
-#try:
+# connects to data base
 conn = psycopg2.connect("dbname='homework_four' user='ppourmand' host='localhost'")
 cursor = conn.cursor()
-#except:
- #   print "I am unable to connect to the database"
-
 
 # open the co2 electric csv file and read it in
 EIA_CO2_Electric = csv.reader(open('EIA_CO2_Electric_2014.csv'))

@@ -1,3 +1,15 @@
 Sample README.
 
-I don't think he'll like a Markdown version so this is just without extenstion
+I doubt he will be okay with readme.MD so now this is just README.
+
+Ideas for Schema:
+
+EIA_CO2_Electric_2014: Key = MSN, YYYYMM, Description
+EIA_CO2_Transportation: Key = MSN, YYYYMM, Description
+EIA_MkWH: Key = MSN, YYYYMM, Description
+
+NHTS
+Household: Key = HouseID
+Person: Key = HouseID, PersonId
+Vehicle: Key = HouseID, VehicleID
+Daytrip: Key = HouseID + PersonID + TripNumber

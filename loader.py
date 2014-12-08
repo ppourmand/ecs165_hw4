@@ -5,9 +5,13 @@
 
 import psycopg2
 import csv
+import os
+
+# obtains the user for the system
+user = os.getlogin()
 
 # connects to data base
-conn = psycopg2.connect("dbname='homework_four' user='ppourmand' host='localhost'")
+conn = psycopg2.connect("dbname='homework_four' user='%s' host='localhost'" % user)
 cursor = conn.cursor()
 
 # open the co2 electric csv file and read it in
@@ -57,7 +61,7 @@ conn.commit()
 next(EIA_CO2_Electric)
 
 # iterates through the csv and breaks up the items and joins them into an INSERT query
-#for row in EIA_CO2_Electric:
+for row in EIA_CO2_Electric:
     sql_statement = ("INSERT INTO eia_co2_electric_2014 VALUES('%s', %d, %f, '%s', '%s', '%s');" % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5]))
     cursor.execute(sql_statement)
     conn.commit()
@@ -65,7 +69,7 @@ next(EIA_CO2_Electric)
 # skips the header in the next csv
 next(EIA_CO2_Transportation)
 
-#for row in EIA_CO2_Transportation:
+for row in EIA_CO2_Transportation:
     sql_statement = ("INSERT INTO eia_co2_transportation_2014 VALUES('%s', %d, %f, '%s', '%s', '%s');" % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5]))
     cursor.execute(sql_statement)
     conn.commit()
@@ -75,9 +79,9 @@ next(EIA_MkWh)
 
 for row in EIA_MkWh:
     if row[2] == 'Not Available':
-            sql_statement = ("INSERT INTO eia_mkwh_2014 VALUES('%s', %d, %s, '%s', '%s', '%s');" % (row[0], int(row[1]), "NULL", row[3], row[4], row[5]))
-            cursor.execute(sql_statement)
-            conn.commit()
+        sql_statement = ("INSERT INTO eia_mkwh_2014 VALUES('%s', %d, %s, '%s', '%s', '%s');" % (row[0], int(row[1]), "NULL", row[3], row[4], row[5]))
+        cursor.execute(sql_statement)
+        conn.commit()
     else:
         sql_statement = ("INSERT INTO eia_mkwh_2014 VALUES('%s', %d, %f, '%s', '%s', '%s');" % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5]))
         cursor.execute(sql_statement)

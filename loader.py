@@ -10,7 +10,19 @@ import os
 # obtains the user for the system
 user = os.getlogin()
 
-# connects to data base
+# connects to default data base
+conn = psycopg2.connect("dbname='postgres' user='%s' host='localhost'" % user)
+cursor = conn.cursor()
+
+# Something about isolation levels, idk this works
+conn.set_isolation_level(0)
+
+# Creates new database from inside of default database
+database_name = "CREATE DATABASE homework_four;"
+cursor.execute(database_name)
+conn.commit()
+
+# Connects to the newly built database
 conn = psycopg2.connect("dbname='homework_four' user='%s' host='localhost'" % user)
 cursor = conn.cursor()
 
@@ -22,7 +34,6 @@ EIA_CO2_Transportation = csv.reader(open('EIA_CO2_Transportation_2014.csv'))
 
 # open the MkWh csv file and read it in
 EIA_MkWh = csv.reader(open('EIA_MkWh_2014.csv'))
-
 
 # Creates the table for EIA_CO2 electric
 sql_statement = "CREATE TABLE EIA_CO2_Electric_2014("

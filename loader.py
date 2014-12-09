@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #Anirudh Agarwala
 #Pasha Pourmand
-#2014-12-6
+#2014-12-8
 
 import psycopg2
 import csv
@@ -59,36 +59,43 @@ conn.commit()
 # skips the header in the csv
 next(EIA_CO2_Electric)
 
-# iterates through the csv and breaks up the items and joins them into an INSERT query
-
+# First line of the insert
 sql_statement = "INSERT INTO eia_co2_electric_2014 VALUES"
 
+# iterates through the csv and breaks up the items and joins them into an INSERT query
 for row in EIA_CO2_Electric:
     sql_statement += "('%s', %d, %f, '%s', '%s', '%s')," % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5])
 
+# Removes the final comma and replaces with a semicolon
 sql_statement = sql_statement[:-1]
 sql_statement += ";"
 
+# Executes the INSERT query for table 1
 cursor.execute(sql_statement)
 conn.commit()
 
 # skips the header in the next csv
 next(EIA_CO2_Transportation)
 
+# First line of the insert
 sql_statement = "INSERT INTO eia_co2_transportation_2014 VALUES"
 
+# iterates through the csv and breaks up the items and joins them into an INSERT query
 for row in EIA_CO2_Transportation:
     sql_statement += "('%s', %d, %f, '%s', '%s', '%s')," % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5])
 
+# Removes the final comma and replaces with a semicolon
 sql_statement = sql_statement[:-1]
 sql_statement += ";"   
 
+# Executes the INSERT query for table 2
 cursor.execute(sql_statement)
 conn.commit()
 
 # skips the header in the next csv
 next(EIA_MkWh)
 
+# First line of the insert
 sql_statement = "INSERT INTO eia_mkwh_2014 VALUES"
 
 for row in EIA_MkWh:
@@ -98,8 +105,11 @@ for row in EIA_MkWh:
     else:
         sql_statement += "('%s', %d, %f, '%s', '%s', '%s')," % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5])
 
+# Removes the final comma and replaces with a semicolon
 sql_statement = sql_statement[:-1]
 sql_statement += ";"
+
+# Executes the INSERT query for table 1
 cursor.execute(sql_statement)
 conn.commit();
 

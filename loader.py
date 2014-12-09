@@ -14,18 +14,6 @@ user = os.getlogin()
 conn = psycopg2.connect("dbname='postgres' user='%s' host='localhost'" % user)
 cursor = conn.cursor()
 
-# Something about isolation levels, idk this works
-conn.set_isolation_level(0)
-
-# Creates new database from inside of default database
-database_name = "CREATE DATABASE homework_four;"
-cursor.execute(database_name)
-conn.commit()
-
-# Connects to the newly built database
-conn = psycopg2.connect("dbname='homework_four' user='%s' host='localhost'" % user)
-cursor = conn.cursor()
-
 # open the co2 electric csv file and read it in
 EIA_CO2_Electric = csv.reader(open('EIA_CO2_Electric_2014.csv'))
 
@@ -72,30 +60,46 @@ conn.commit()
 next(EIA_CO2_Electric)
 
 # iterates through the csv and breaks up the items and joins them into an INSERT query
+
+sql_statement = "INSERT INTO eia_co2_electric_2014 VALUES"
+
 for row in EIA_CO2_Electric:
-    sql_statement = ("INSERT INTO eia_co2_electric_2014 VALUES('%s', %d, %f, '%s', '%s', '%s');" % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5]))
-    cursor.execute(sql_statement)
-    conn.commit()
+    sql_statement += "('%s', %d, %f, '%s', '%s', '%s')," % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5])
+
+sql_statement = sql_statement[:-1]
+sql_statement += ";"
+
+cursor.execute(sql_statement)
+conn.commit()
 
 # skips the header in the next csv
 next(EIA_CO2_Transportation)
 
+sql_statement = "INSERT INTO eia_co2_transportation_2014 VALUES"
+
 for row in EIA_CO2_Transportation:
-    sql_statement = ("INSERT INTO eia_co2_transportation_2014 VALUES('%s', %d, %f, '%s', '%s', '%s');" % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5]))
-    cursor.execute(sql_statement)
-    conn.commit()
+    sql_statement += "('%s', %d, %f, '%s', '%s', '%s')," % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5])
+
+sql_statement = sql_statement[:-1]
+sql_statement += ";"   
+
+cursor.execute(sql_statement)
+conn.commit()
 
 # skips the header in the next csv
 next(EIA_MkWh)
 
+sql_statement = "INSERT INTO eia_mkwh_2014 VALUES"
+
 for row in EIA_MkWh:
     if row[2] == 'Not Available':
-        sql_statement = ("INSERT INTO eia_mkwh_2014 VALUES('%s', %d, %s, '%s', '%s', '%s');" % (row[0], int(row[1]), "NULL", row[3], row[4], row[5]))
-        cursor.execute(sql_statement)
-        conn.commit()
-    else:
-        sql_statement = ("INSERT INTO eia_mkwh_2014 VALUES('%s', %d, %f, '%s', '%s', '%s');" % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5]))
-        cursor.execute(sql_statement)
-        conn.commit()
+        sql_statement += "('%s', %d, %s, '%s', '%s', '%s')," % (row[0], int(row[1]), "NULL", row[3], row[4], row[5])
 
+    else:
+        sql_statement += "('%s', %d, %f, '%s', '%s', '%s')," % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5])
+
+sql_statement = sql_statement[:-1]
+sql_statement += ";"
+cursor.execute(sql_statement)
+conn.commit();
 

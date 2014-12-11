@@ -64,7 +64,11 @@ sql_statement = "INSERT INTO eia_co2_electric_2014 VALUES"
 
 # iterates through the csv and breaks up the items and joins them into an INSERT query
 for row in EIA_CO2_Electric:
-    sql_statement += "('%s', %d, %f, '%s', '%s', '%s')," % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5])
+   if row[2] == 'Not Available':
+        sql_statement += "('%s', %d, %s, '%s', '%s', '%s')," % (row[0], int(row[1]), "NULL", row[3], row[4], row[5])
+
+   else:
+   		sql_statement += "('%s', %d, %f, '%s', '%s', '%s')," % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5])
 
 # Removes the final comma and replaces with a semicolon
 sql_statement = sql_statement[:-1]
@@ -82,7 +86,11 @@ sql_statement = "INSERT INTO eia_co2_transportation_2014 VALUES"
 
 # iterates through the csv and breaks up the items and joins them into an INSERT query
 for row in EIA_CO2_Transportation:
-    sql_statement += "('%s', %d, %f, '%s', '%s', '%s')," % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5])
+   if row[2] == 'Not Available':
+        sql_statement += "('%s', %d, %s, '%s', '%s', '%s')," % (row[0], int(row[1]), "NULL", row[3], row[4], row[5])
+
+   else:
+   		sql_statement += "('%s', %d, %f, '%s', '%s', '%s')," % (row[0], int(row[1]), float(row[2]), row[3], row[4], row[5])
 
 # Removes the final comma and replaces with a semicolon
 sql_statement = sql_statement[:-1]
